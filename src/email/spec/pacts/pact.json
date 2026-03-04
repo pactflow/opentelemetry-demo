@@ -1,0 +1,117 @@
+{
+  "consumer": {
+    "name": "email-consumer"
+  },
+  "interactions": [
+    {
+      "description": "a request to send an email confirmation",
+      "pending": false,
+      "providerStates": [],
+      "request": {
+        "body": {
+          "content": {
+              "email": "you@saf.dev",
+              "order": {
+                "order_id": "100",
+                "shipping_tracking_id": "TRACK123456",
+                "shipping_cost": {
+                  "units": 10,
+                  "nanos": 500000000,
+                  "currency_code": "USD"
+                },
+                "shipping_address": {
+                  "street_address_1": "123 Main St",
+                  "street_address_2": "Apt 4B",
+                  "city": "San Francisco",
+                  "country": "USA",
+                  "zip_code": "94105"
+                },
+                "items": [
+                  {
+                    "item": {
+                      "product_id": "PROD001",
+                      "quantity": 2
+                    },
+                    "cost": {
+                      "units": 25,
+                      "nanos": 0,
+                      "currency_code": "USD"
+                    }
+                  }
+                ]
+              }
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          },
+          "header": {
+            "Authorization": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/send_order_confirmation"
+      },
+      "response": {
+        "body": {
+          "content": "",
+          "contentType": "text/html;charset=utf-8",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "text/html;charset=utf-8"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            }
+          }
+        },
+        "status": 200
+      },
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pactRust": {
+      "ffi": "0.4.28",
+      "models": "1.3.5"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "email-service"
+  }
+}

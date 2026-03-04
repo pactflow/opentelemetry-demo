@@ -1,0 +1,18 @@
+# yaml-language-server: $schema=https://download.pactflow.io/drift/schemas/drift.testcases.v1.schema.json
+drift-testcase-file: v1
+title: "Product API Tests"
+
+sources:
+  - name: source-oad
+    path: ./openapi.yaml
+
+plugins:
+  - name: oas
+  - name: json
+
+operations:
+  send_order_confirmation_Success:
+    target: source-oad:send_order_confirmation
+    expected:
+      response:
+        statusCode: 200
