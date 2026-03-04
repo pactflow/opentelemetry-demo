@@ -1,0 +1,179 @@
+{
+  "consumer": {
+    "name": "checkout"
+  },
+  "interactions": [
+    {
+      "description": "a request to send order confirmation",
+      "pending": false,
+      "providerStates": [
+        {
+          "name": "email service is available"
+        }
+      ],
+      "request": {
+        "body": {
+          "content": {
+            "email": "customer@example.com",
+            "order": {
+              "items": [
+                {
+                  "cost": {
+                    "currency_code": "USD",
+                    "nanos": 0,
+                    "units": 25
+                  },
+                  "item": {
+                    "product_id": "PROD001",
+                    "quantity": 2
+                  }
+                }
+              ],
+              "order_id": "100",
+              "shipping_address": {
+                "city": "San Francisco",
+                "country": "USA",
+                "street_address": "123 Main St",
+                "zip_code": "94105"
+              },
+              "shipping_cost": {
+                "currency_code": "USD",
+                "nanos": 500000000,
+                "units": 10
+              },
+              "shipping_tracking_id": "TRACK123456"
+            }
+          },
+          "contentType": "application/json",
+          "encoded": false
+        },
+        "headers": {
+          "Content-Type": [
+            "application/json"
+          ]
+        },
+        "matchingRules": {
+          "body": {
+            "$.order": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.order.items": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type",
+                  "min": 1
+                }
+              ]
+            },
+            "$.order.items[*].cost": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.order.items[*].cost.nanos": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.order.items[*].cost.units": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.order.items[*].item": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.order.items[*].item.quantity": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.order.shipping_address": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.order.shipping_cost": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "type"
+                }
+              ]
+            },
+            "$.order.shipping_cost.nanos": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            },
+            "$.order.shipping_cost.units": {
+              "combine": "AND",
+              "matchers": [
+                {
+                  "match": "integer"
+                }
+              ]
+            }
+          }
+        },
+        "method": "POST",
+        "path": "/send_order_confirmation"
+      },
+      "response": {
+        "headers": {
+          "Content-Type": [
+            "text/html"
+          ]
+        },
+        "status": 200
+      },
+      "transport": "http",
+      "type": "Synchronous/HTTP"
+    }
+  ],
+  "metadata": {
+    "pact-go": {
+      "version": "2.4.2"
+    },
+    "pactRust": {
+      "ffi": "0.4.26",
+      "mockserver": "1.2.11",
+      "models": "1.2.7"
+    },
+    "pactSpecification": {
+      "version": "4.0"
+    }
+  },
+  "provider": {
+    "name": "email-service"
+  }
+}

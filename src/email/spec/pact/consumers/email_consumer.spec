@@ -22,6 +22,7 @@ RSpec.describe 'Verify consumers for Email Service', :pact_v2 do
     provider_setup_port: 9003,
     log_level: :info,
     fail_if_no_pacts_found: true,
+    # pact_uri: File.expand_path("../../../../checkout/pacts/checkout-email-service.json", __dir__),
     pact_uri: File.expand_path("../../pacts/pact.json", __dir__),
     # broker_url: 'http://localhost:9292', # can be set via PACT_BROKER_URL env var
     enable_pending: true,
