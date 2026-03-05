@@ -26,9 +26,25 @@
             "App\\": "src/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "PhpPactTest\\": "tests/PhpPact",
+            "PhpPactTest\\CompatibilitySuite\\": "compatibility-suite/tests",
+            "PhpPactTest\\Helper\\": "helper"
+        }
+    },
     "config": {
         "allow-plugins": {
-            "php-http/discovery": false
+            "php-http/discovery": false,
+            "tbachert/spi": true,
+            "pact-foundation/composer-downloads-plugin": true
         }
-    }
+    },
+    "require-dev": {
+        "pact-foundation/pact-php": "^10.2",
+        "phpunit/phpunit": "^10.1.0|^11.0"
+    },
+    "scripts": {
+        "test": "phpunit --no-coverage"
+        }
 }
