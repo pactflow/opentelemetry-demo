@@ -1,0 +1,270 @@
+openapi: 3.0.0
+info:
+  title: Shipping Service API
+  description: |
+    The Shipping service handles shipping quote calculations and order fulfillment.
+    It queries the quote service for price calculations, provides tracking IDs,
+    and manages the impression of order fulfillment & shipping processes.
+  version: 1.0.0
+  contact:
+    name: OpenTelemetry Demo
+    url: https://github.com/open-telemetry/opentelemetry-demo
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+  - url: http://shipping:8000
+    description: Docker compose service endpoint
+
+paths:
+  /get-quote:
+    post:
+      summary: Get shipping quote
+      description: |
+        Retrieves a shipping quote based on the items to be shipped and their destination.
+        The service calculates the cost based on item quantities and queries the quote service.
+      operationId: getQuote
+      requestBody:
+        required: true
+        description: Request containing items and optional delivery address
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GetQuoteRequest'
+            examples:
+              simple:
+                summary: Simple quote request
+                value:
+                  items:
+                    - productId: "OLJCESPC7Z"
+                      quantity: 2
+              withAddress:
+                summary: Quote request with address
+                value:
+                  items:
+                    - productId: "OLJCESPC7Z"
+                      quantity: 2
+                    - productId: "9SIQT8TNJE"
+                      quantity: 1
+                  address:
+                    streetAddress: "1600 Pennsylvania Ave"
+                    city: "Washington"
+                    state: "DC"
+                    country: "USA"
+                    zipCode: "20500"
+      responses:
+        '200':
+          description: Successfully calculated shipping quote
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GetQuoteResponse'
+              examples:
+                response:
+                  summary: Example quote response
+                  value:
+                    cost_usd:
+                      currency_code: "USD"
+                      units: 100
+                      nanos: 500000000
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error - failed to get quote
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /ship-order:
+    post:
+      summary: Ship order
+      description: |
+        Creates a shipment for the given order. Generates a tracking ID
+        and simulates the order fulfillment process.
+      operationId: shipOrder
+      requestBody:
+        required: true
+        description: Order details for shipping
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShipOrderRequest'
+            examples:
+              simple:
+                summary: Simple ship order request
+                value:
+                  items:
+                    - productId: "OLJCESPC7Z"
+                      quantity: 2
+              withAddress:
+                summary: Ship order request with address
+                value:
+                  items:
+                    - productId: "OLJCESPC7Z"
+                      quantity: 2
+                    - productId: "9SIQT8TNJE"
+                      quantity: 1
+                  address:
+                    streetAddress: "1600 Pennsylvania Ave"
+                    city: "Washington"
+                    state: "DC"
+                    country: "USA"
+                    zipCode: "20500"
+      responses:
+        '200':
+          description: Order shipped successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ShipOrderResponse'
+              examples:
+                response:
+                  summary: Example ship order response
+                  value:
+                    tracking_id: "e6f8a820-6a5c-4c1f-b5f5-8e9b2c1d0e4f"
+        '400':
+          description: Invalid request parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  schemas:
+    CartItem:
+      type: object
+      required:
+        - productId
+        - quantity
+      properties:
+        productId:
+          type: string
+          description: Product identifier
+          example: "OLJCESPC7Z"
+        quantity:
+          type: integer
+          format: uint32
+          minimum: 0
+          description: Quantity of items
+          example: 2
+
+    Address:
+      type: object
+      required:
+        - streetAddress
+        - city
+        - state
+        - country
+        - zipCode
+      properties:
+        streetAddress:
+          type: string
+          description: Street address
+          example: "1600 Pennsylvania Ave"
+        city:
+          type: string
+          description: City name
+          example: "Washington"
+        state:
+          type: string
+          description: State or province code
+          example: "DC"
+        country:
+          type: string
+          description: Country name or code
+          example: "USA"
+        zipCode:
+          type: string
+          description: Postal/ZIP code
+          example: "20500"
+
+    Money:
+      type: object
+      required:
+        - currency_code
+        - units
+        - nanos
+      properties:
+        currency_code:
+          type: string
+          description: ISO 4217 currency code
+          example: "USD"
+        units:
+          type: integer
+          format: uint64
+          description: Whole units of the amount
+          example: 100
+        nanos:
+          type: integer
+          format: uint32
+          minimum: 0
+          maximum: 999999999
+          description: Fractions of a unit (nanoseconds precision)
+          example: 500000000
+
+    GetQuoteRequest:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          description: List of items to ship
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/CartItem'
+        address:
+          $ref: '#/components/schemas/Address'
+
+    GetQuoteResponse:
+      type: object
+      properties:
+        cost_usd:
+          $ref: '#/components/schemas/Money'
+
+    ShipOrderRequest:
+      type: object
+      required:
+        - items
+      properties:
+        items:
+          type: array
+          description: List of items to ship
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/CartItem'
+        address:
+          $ref: '#/components/schemas/Address'
+
+    ShipOrderResponse:
+      type: object
+      required:
+        - tracking_id
+      properties:
+        tracking_id:
+          type: string
+          format: uuid
+          description: Unique tracking identifier for the shipment
+          example: "e6f8a820-6a5c-4c1f-b5f5-8e9b2c1d0e4f"
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message describing what went wrong
+
+tags:
+  - name: Shipping
+    description: Shipping and quote operations

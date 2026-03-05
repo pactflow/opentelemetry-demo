@@ -5,6 +5,9 @@
 name = "shipping"
 edition = "2021"
 
+[lib]
+path = "src/lib.rs"
+
 [[bin]]
 name = "shipping"
 path = "src/main.rs"
@@ -24,6 +27,7 @@ opentelemetry-otlp = { version = "0.31.0", features = ["grpc-tonic"] }
 opentelemetry-instrumentation-actix-web = { version = "0.23.0", features = ["sync-middleware", "awc", "metrics"] }
 opentelemetry-appender-tracing = "0.31.1"
 opentelemetry-resource-detectors = "0.10.0"
+tokio = { version = "1.50.0", features = ["full"] }
 
 [dependencies.uuid]
 version = "1.22.0"

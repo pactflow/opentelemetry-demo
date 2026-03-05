@@ -1706,6 +1706,7 @@ dependencies = [
  "opentelemetry-resource-detectors",
  "opentelemetry_sdk",
  "serde",
+ "tokio",
  "tonic",
  "tracing",
  "tracing-subscriber",
