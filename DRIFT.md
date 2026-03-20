@@ -7,7 +7,8 @@ Samples of API testing
 
 ## Getting Started
 
-- [Install drift](https://pactflow.github.io/drift-docs/docs/how-to/install): `npm install -g @pactflow/drift`
+- [Install drift](https://pactflow.github.io/drift-docs/docs/how-to/install)
+  - `npm install -g @pactflow/drift`
 
 ## Consumers
 
@@ -40,9 +41,9 @@ bundle install
 bundle exec rspec spec/api.test.rb
 ```
 
-  - Pact (Consumer Contract) Verification Tests
-    - [pact test](./src/email/spec/pact/consumers/email_consumer.spec.rb)
-    - [pact sample](./src/email/spec/pacts/pact.json)
+- Pact (Consumer Contract) Verification Tests
+  - [pact test](./src/email/spec/pact/consumers/email_consumer.spec.rb)
+  - [pact sample](./src/email/spec/pacts/pact.json)
 
 ```sh
 cd src/email

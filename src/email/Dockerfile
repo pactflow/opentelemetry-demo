@@ -8,7 +8,7 @@ COPY ./src/email/Gemfile Gemfile
 COPY ./src/email/Gemfile.lock Gemfile.lock
 
 RUN apk update && \
-    apk add make gcc musl-dev gcompat && \
+    apk add make gcc musl-dev gcompat yaml-dev && \
     bundle install
 
 FROM docker.io/library/ruby:3.4.8-alpine3.22

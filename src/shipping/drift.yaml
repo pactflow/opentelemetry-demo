@@ -11,13 +11,12 @@ plugins:
   - name: json
 
 operations:
-
   # requires mock for quote service
   getQuote_Success:
     target: source-oad:getQuote
     tags:
       - pending
-    parameters: 
+    parameters:
       request:
         body:
           items:
@@ -31,7 +30,7 @@ operations:
     target: source-oad:shipOrder
     tags:
       - test
-    parameters: 
+    parameters:
       request:
         body:
           items:
@@ -42,7 +41,7 @@ operations:
     target: source-oad:shipOrder
     tags:
       - test
-    parameters: 
+    parameters:
       request:
         body:
           items:
@@ -58,7 +57,7 @@ operations:
     target: source-oad:shipOrder
     tags:
       - test
-    parameters: 
+    parameters:
       request:
         body:
           items:
@@ -71,19 +70,18 @@ operations:
     target: source-oad:shipOrder
     tags:
       - pending
-    parameters: 
+    parameters:
       request:
         headers:
           Content-Type: "application/json"
         body:
           items:
             - productId: "OLJCESPC7Z"
-    ignore: 
+    ignore:
       schema: true
     expected:
       response:
         statusCode: 400
-
 
 # ─[ Failures ]───────────────────────────────────────────────────────────────────────────────
 

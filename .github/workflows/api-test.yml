@@ -1,84 +1,79 @@
 name: API Drift
 
 on:
-    push:
+  push:
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        strategy:
-            fail-fast: false
-            matrix:
-                project: [
-                    ruby,
-                    rust,
-                    golang,
-                    php
-                  ]
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        project: [ruby, rust, golang, php]
 
-        steps:
-            - uses: actions/checkout@v6
+    steps:
+      - uses: actions/checkout@v6
 
-            - name: setup ruby
-              if: matrix.project == 'ruby'
-              uses: ruby/setup-ruby@v1
-              with:
-                ruby-version: 3.4
+      - name: setup ruby
+        if: matrix.project == 'ruby'
+        uses: ruby/setup-ruby@v1
+        with:
+          ruby-version: 3.4
 
-            - name: Install drift
-              run: npm install -g @pactflow/drift
-            - name: Authenticate drift
-              run: drift auth login
-              env:
-                PACT_BROKER_BASE_URL: ${{ vars.PACT_BROKER_BASE_URL }}
-                PACT_BROKER_TOKEN : ${{ secrets.PACT_BROKER_TOKEN }}
+      - name: Install drift
+        run: npm install -g @pactflow/drift
+      - name: Authenticate drift
+        run: drift auth login
+        env:
+          PACT_BROKER_BASE_URL: ${{ vars.PACT_BROKER_BASE_URL }}
+          PACT_BROKER_TOKEN: ${{ secrets.PACT_BROKER_TOKEN }}
 
-            - name: Install dependencies
-              if: matrix.project == 'ruby'
-              run: bundle install
-              working-directory: src/email
+      - name: Install dependencies
+        if: matrix.project == 'ruby'
+        run: bundle install
+        working-directory: src/email
 
-            - name: Run Pact tests
-              if: matrix.project == 'ruby'
-              run: bundle exec rspec spec/pact/consumers/email_consumer.spec.rb --tag pact_v2
-              working-directory: src/email
+      - name: Run Pact tests
+        if: matrix.project == 'ruby'
+        run: bundle exec rspec spec/pact/consumers/email_consumer.spec.rb --tag pact_v2
+        working-directory: src/email
 
-            - name: Run Drift tests
-              if: matrix.project == 'ruby'
-              run: bundle exec rspec spec/api.test.rb
-              working-directory: src/email
+      - name: Run Drift tests
+        if: matrix.project == 'ruby'
+        run: bundle exec rspec spec/api.test.rb
+        working-directory: src/email
 
-            - name: Run Drift tests
-              if: matrix.project == 'rust'
-              run: cargo test
-              working-directory: src/shipping
-              env:
-                SHIPPING_PORT: 50050
+      - name: Run Drift tests
+        if: matrix.project == 'rust'
+        run: cargo test
+        working-directory: src/shipping
+        env:
+          SHIPPING_PORT: 50050
 
-            - name: Install dependencies
-              if: matrix.project == 'golang'
-              run: |
-                go install github.com/pact-foundation/pact-go/v2@latest
-                sudo $HOME/go/bin/pact-go -l DEBUG install
-                sudo chmod 644 /usr/local/lib/libpact_ffi.so
-                ls -la /usr/local/lib/
+      - name: Install dependencies
+        if: matrix.project == 'golang'
+        run: |
+          go install github.com/pact-foundation/pact-go/v2@latest
+          sudo $HOME/go/bin/pact-go -l DEBUG install
+          sudo chmod 644 /usr/local/lib/libpact_ffi.so
+          ls -la /usr/local/lib/
 
-            - name: Run Pact tests
-              if: matrix.project == 'golang'
-              run: go test -v
-              working-directory: src/checkout
-            - name: Install dependencies
-              if: matrix.project == 'php'
-              uses: shivammathur/setup-php@v2
-              with:
-                php-version: '8.5'
-                extensions: opcache, pcntl, protobuf, opentelemetry
-            - name: Install dependencies
-              if: matrix.project == 'php'
-              working-directory: src/quote
-              run: composer install
+      - name: Run Pact tests
+        if: matrix.project == 'golang'
+        run: go test -v
+        working-directory: src/checkout
+      - name: Install dependencies
+        if: matrix.project == 'php'
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: "8.5"
+          extensions: opcache, pcntl, protobuf, opentelemetry
+      - name: Install dependencies
+        if: matrix.project == 'php'
+        working-directory: src/quote
+        run: composer install
 
-            - name: Run Drift tests
-              if: matrix.project == 'php'
-              run: composer test
-              working-directory: src/quote
+      - name: Run Drift tests
+        if: matrix.project == 'php'
+        run: composer test
+        working-directory: src/quote
