@@ -7,6 +7,7 @@ jobs:
     build:
         runs-on: ubuntu-latest
         strategy:
+            fail-fast: false
             matrix:
                 project: [
                     ruby,
@@ -26,6 +27,11 @@ jobs:
 
             - name: Install drift
               run: npm install -g @pactflow/drift
+            - name: Authenticate drift
+              run: drift auth login
+              env:
+                PACT_BROKER_BASE_URL: ${{ vars.PACT_BROKER_BASE_URL }}
+                PACT_BROKER_TOKEN : ${{ secrets.PACT_BROKER_TOKEN }}
 
             - name: Install dependencies
               if: matrix.project == 'ruby'

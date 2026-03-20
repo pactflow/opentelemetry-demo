@@ -35,7 +35,7 @@ class ApiTest extends TestCase
 
   private function runDrift(string $testFile, string $serverUrl, string $logLevel): int
   {
-    $command = "drift verifier --test-files {$testFile} --server-url {$serverUrl} --log-level {$logLevel}";
+    $command = "drift verify --test-files {$testFile} --server-url {$serverUrl} --log-level {$logLevel}";
     $process = proc_open($command, [1 => STDOUT, 2 => STDERR], $pipes);
     $exitCode = proc_close($process);
     return $exitCode; }

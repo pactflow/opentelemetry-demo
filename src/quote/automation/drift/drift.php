@@ -10,7 +10,7 @@ function run_drift($options = []) {
 
   $cmd = [
     'drift',
-    'verifier',
+    'verify',
     '--test-files', $test_file,
     '--server-url', $server_url,
     '--log-level', $log_level,

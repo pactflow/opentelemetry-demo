@@ -12,7 +12,7 @@ mod api_drift_tests {
 
         let output = Command::new("drift")
             .args(&[
-                "verifier",
+                "verify",
                 "--test-files",
                 "drift.yaml",
                 "--server-url",
