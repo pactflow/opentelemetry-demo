@@ -119,8 +119,8 @@ mod api_drift_tests {
             }
             Err(e) => {
                 eprintln!("⚠️  Could not run Drift: {}", e);
-                eprintln!("   Make sure Drift is installed: npm install -g @apitools/drift");
-                eprintln!("   Or visit: https://www.drift.dev/");
+                eprintln!("   Make sure Drift is installed: npm install -g @pactflow/drift");
+                eprintln!("   Or visit: https://pactflow.github.io/drift-docs/docs/how-to/install");
                 server_handle.abort();
                 panic!("Failed to run Drift: {}", e);
             }
