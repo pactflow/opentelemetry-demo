@@ -72,13 +72,13 @@ operations:
       - test
     parameters:
       request:
+        ignore:
+          schema: true
         headers:
           Content-Type: "application/json"
         body:
           items:
             - productId: "OLJCESPC7Z"
-    ignore:
-      schema: true
     expected:
       response:
         statusCode: 400
