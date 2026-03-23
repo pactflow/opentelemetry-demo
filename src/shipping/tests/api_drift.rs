@@ -1,10 +1,10 @@
 #[cfg(test)]
 mod api_drift_tests {
-    use actix_web::{App, HttpServer};
+    use actix_web::{web, App, HttpResponse, HttpServer};
+    use shipping::shipping_service::{get_quote, ship_order};
     use std::io;
     use std::process::Command;
     use std::time::Duration;
-    use shipping::shipping_service::{get_quote, ship_order};
 
     /// Helper function to run Drift and validate API contract
     fn run_drift_validation(server_url: &str) -> io::Result<bool> {
@@ -51,7 +51,10 @@ mod api_drift_tests {
                 }
                 Err(_) => {
                     if attempt < max_attempts {
-                        println!("⏳ Waiting for server... (attempt {}/{})", attempt, max_attempts);
+                        println!(
+                            "⏳ Waiting for server... (attempt {}/{})",
+                            attempt, max_attempts
+                        );
                         tokio::time::sleep(Duration::from_millis(delay_ms)).await;
                     }
                 }
@@ -78,6 +81,16 @@ mod api_drift_tests {
         let server_handle = tokio::spawn(async move {
             let server = HttpServer::new(|| {
                 App::new()
+                    .app_data(web::JsonConfig::default().error_handler(|err, _req| {
+                        let error_response = serde_json::json!({
+                            "error": format!("{}", err)
+                        });
+                        actix_web::error::InternalError::from_response(
+                            err,
+                            HttpResponse::BadRequest().json(error_response),
+                        )
+                        .into()
+                    }))
                     .service(get_quote)
                     .service(ship_order)
             })

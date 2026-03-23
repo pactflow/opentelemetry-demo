@@ -1,7 +1,7 @@
 // Copyright The OpenTelemetry Authors
 // SPDX-License-Identifier: Apache-2.0
 
-use actix_web::{App, HttpServer};
+use actix_web::{App, HttpServer, HttpResponse, web};
 use opentelemetry_instrumentation_actix_web::{RequestMetrics, RequestTracing};
 use std::env;
 use tracing::info;
@@ -47,6 +47,19 @@ async fn main() -> std::io::Result<()> {
         App::new()
             .wrap(RequestTracing::new())
             .wrap(RequestMetrics::default())
+            .app_data(
+                web::JsonConfig::default()
+                    .error_handler(|err, _req| {
+                        let error_response = serde_json::json!({
+                            "error": format!("{}", err)
+                        });
+                        actix_web::error::InternalError::from_response(
+                            err,
+                            HttpResponse::BadRequest().json(error_response),
+                        )
+                        .into()
+                    })
+            )
             .service(get_quote)
             .service(ship_order)
     })

@@ -69,7 +69,7 @@ operations:
   shipOrder_invalidField_Failure:
     target: source-oad:shipOrder
     tags:
-      - pending
+      - test
     parameters:
       request:
         headers:
@@ -82,15 +82,3 @@ operations:
     expected:
       response:
         statusCode: 400
-
-# ─[ Failures ]───────────────────────────────────────────────────────────────────────────────
-
-# ┌─ Testcase 'Shipping Server Tests'
-# │
-# │   Operation 'shipOrder_invalidField_Failure':
-# │
-# │       schema:
-# │           1) "Json deserialize error: missing field `quantity` at line 1 column 36" is n
-# │              ot of type "object"
-# │
-# └─
