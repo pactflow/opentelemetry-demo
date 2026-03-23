@@ -79,6 +79,27 @@ checklicense:	$(ADDLICENSE)
 		-ignore **/*_pb2_grpc.py \
 		-ignore **/genproto/** \
 		-ignore **/protos/*.ts \
+		-ignore **/node_modules/** \
+		-ignore **/.next/** \
+		-ignore .ruby-lsp/Gemfile \
+		-ignore test/tracetesting/tracetesting-vars.yaml \
+		-ignore src/frontend/next-env.d.ts \
+		-ignore **/src/**/obj/Debug/** \
+		-ignore .github/workflows/api-test.yml \
+		-ignore src/checkout/main_test.go \
+		-ignore src/email/automation/drift/drift.rb \
+		-ignore src/email/drift.yaml \
+		-ignore src/email/openapi.yaml \
+		-ignore src/email/spec/api.test.rb \
+		-ignore src/email/spec/pact/consumers/email_consumer.spec.rb \
+		-ignore src/quote/phpunit.xml \
+		-ignore src/quote/drift.yaml \
+		-ignore src/quote/openapi.yaml \
+		-ignore src/quote/test/ApiTest.php \
+		-ignore src/quote/automation/drift/drift.php \
+		-ignore src/shipping/drift.yaml \
+		-ignore src/shipping/openapi.yaml \
+		-ignore src/shipping/tests/api_drift.rs \
 		.
 
 .PHONY: addlicense
