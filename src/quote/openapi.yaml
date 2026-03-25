@@ -1,0 +1,49 @@
+openapi: 3.0.3
+info:
+  title: Quote Service API
+  version: 1.0.0
+  description: API for calculating quotes based on number of items.
+servers:
+  - url: /quote
+paths:
+  /getquote:
+    post:
+      summary: Calculate quote
+      operationId: getQuote
+      description: Returns a quote based on the number of items in the request.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                numberOfItems:
+                  type: integer
+                  description: Number of items to quote for
+              required:
+                - numberOfItems
+            examples:
+              application/json:
+                summary: Example quote request
+                value:
+                  numberOfItems: 5
+                  costPerItem: 8.99
+                  totalCost: 44.95
+                  timestamp: "2024-01-15T10:30:00Z"
+      responses:
+        '200':
+          description: Quote calculated successfully
+          content:
+            application/json:
+              schema:
+                type: number
+                format: float
+              examples:
+                application/json:
+                  summary: Example quote response
+                  value: 44.95
+        '400':
+          description: Invalid input (numberOfItems missing or not an integer)
+        '500':
+          description: Internal server error

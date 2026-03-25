@@ -1,0 +1,123 @@
+openapi: 3.1.0
+info:
+  title: Email Service API
+  version: 1.0.0
+  description: API for sending order confirmation emails
+
+paths:
+  /send_order_confirmation:
+    post:
+      operationId: send_order_confirmation
+      summary: Send order confirmation email
+      description: Send an order confirmation email to a customer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                order:
+                  $ref: '#/components/schemas/Order'
+              required:
+                - email
+                - order
+            examples:
+              application/json:
+                description: a valid order payload
+                value:
+                  email: "you@saf.dev"
+                  order:
+                    order_id: "100"
+                    shipping_tracking_id: "TRACK123456"
+                    shipping_cost:
+                      units: 10
+                      nanos: 500000000
+                      currency_code: "USD"
+                    shipping_address:
+                      street_address_1: "123 Main St"
+                      street_address_2: "Apt 4B"
+                      city: "San Francisco"
+                      country: "USA"
+                      zip_code: "94105"
+                    items:
+                      - item:
+                          product_id: "PROD001"
+                          quantity: 2
+                        cost:
+                          units: 25
+                          nanos: 0
+                          currency_code: "USD"
+      responses:
+        '200':
+          description: Email sent successfully
+          content:
+            text/html:
+              schema:
+                type: string
+
+components:
+  schemas:
+    Order:
+      type: object
+      properties:
+        order_id:
+          type: string
+        shipping_tracking_id:
+          type: string
+        shipping_cost:
+          $ref: '#/components/schemas/Money'
+        shipping_address:
+          $ref: '#/components/schemas/Address'
+        items:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrderItem'
+      required:
+        - order_id
+        - items
+
+    OrderItem:
+      type: object
+      properties:
+        item:
+          $ref: '#/components/schemas/Product'
+        cost:
+          $ref: '#/components/schemas/Money'
+
+    Product:
+      type: object
+      properties:
+        product_id:
+          type: string
+        quantity:
+          type: integer
+
+    Money:
+      type: object
+      properties:
+        currency_code:
+          type: string
+        units:
+          type: integer
+        nanos:
+          type: integer
+
+    Address:
+      type: object
+      properties:
+        street_address_1:
+          type: string
+        street_address_2:
+          type: string
+        city:
+          type: string
+        state:
+          type: string
+        country:
+          type: string
+        zip_code:
+          type: string
